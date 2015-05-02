@@ -93,6 +93,7 @@ class nginx (
   $temp_dir                       = undef,
   $vhost_purge                    = undef,
   $ssl_dir                        = '/etc/ssl/nginx',
+  $has_systemd                    = false,
 
   # Primary Templates
   $conf_template                  = undef,

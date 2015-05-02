@@ -47,12 +47,26 @@ class nginx::service(
       }
     }
     default: {
-      service { 'nginx':
-        ensure     => $service_ensure_real,
-        name       => $service_name,
-        enable     => $service_enable,
-        hasstatus  => true,
-        hasrestart => true,
+
+      if $::nginx::has_systemd {
+        service { 'nginx':
+          ensure     => $service_ensure_real,
+          name       => $service_name,
+          enable     => $service_enable,
+          hasstatus  => true,
+          hasrestart => true,
+          provider   => systemd,
+        }
+
+      }
+      else {
+        service { 'nginx':
+          ensure     => $service_ensure_real,
+          name       => $service_name,
+          enable     => $service_enable,
+          hasstatus  => true,
+          hasrestart => true,
+        }
       }
     }
   }

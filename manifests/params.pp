@@ -4,7 +4,7 @@ class nginx::params {
   $_module_defaults = {
     'conf_dir'    => '/etc/nginx',
     'daemon_user' => 'nginx',
-    'pid'         => '/var/run/nginx.pid',
+    'pid'         => '/run/nginx.pid',
     'root_group'  => 'root',
     'log_dir'     => '/var/log/nginx',
     'run_dir'     => '/var/nginx',

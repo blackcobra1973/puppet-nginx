@@ -2,14 +2,15 @@ class nginx::params {
   ### Operating System Configuration
   ## This is my hacky... no hiera system. Oh well. :)
   $_module_defaults = {
-    'conf_dir'    => '/etc/nginx',
-    'daemon_user' => 'nginx',
-    'pid'         => '/run/nginx.pid',
-    'root_group'  => 'root',
-    'log_dir'     => '/var/log/nginx',
-    'run_dir'     => '/var/nginx',
-    'package_name' => 'nginx',
-    'manage_repo'  => false,
+    'conf_dir'      => '/etc/nginx',
+    'daemon_user'   => 'nginx',
+    'pid'           => '/run/nginx.pid',
+    'root_group'    => 'root',
+    'log_dir'       => '/var/log/nginx',
+    'log_delimiter' => '.',
+    'run_dir'       => '/var/nginx',
+    'package_name'  => 'nginx',
+    'manage_repo'   => false,
   }
   case $::osfamily {
     'ArchLinux': {
@@ -40,7 +41,8 @@ class nginx::params {
     }
     'Gentoo': {
       $_module_os_overrides = {
-        'package_name' => 'www-servers/nginx',
+        'package_name'  => 'www-servers/nginx',
+        'log_delimiter' => '_',
       }
     }
     'RedHat': {
@@ -84,6 +86,7 @@ class nginx::params {
   ### Referenced Variables
   $conf_dir              = $_module_parameters['conf_dir']
   $log_dir               = $_module_parameters['log_dir']
+  $log_delimiter         = $_module_parameters['log_delimiter']
   $run_dir               = $_module_parameters['run_dir']
   $temp_dir              = '/tmp'
   $pid                   = $_module_parameters['pid']
@@ -93,9 +96,9 @@ class nginx::params {
   $global_owner          = 'root'
   $global_group          = $_module_parameters['root_group']
   $global_mode           = '0644'
-  $http_access_log       = "${log_dir}/access.log"
+  $http_access_log       = "${log_dir}/access${log_delimiter}log"
   $manage_repo           = $_module_parameters['manage_repo']
-  $nginx_error_log       = "${log_dir}/error.log"
+  $nginx_error_log       = "${log_dir}/error${log_delimiter}log"
   $root_group            = $_module_parameters['root_group']
   $package_name          = $_module_parameters['package_name']
   $proxy_temp_path       = "${run_dir}/proxy_temp"

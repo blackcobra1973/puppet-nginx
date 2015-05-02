@@ -25,6 +25,7 @@ class nginx::config(
   $log_dir                        = $::nginx::params::log_dir,
   $http_access_log                = $::nginx::params::http_access_log,
   $nginx_error_log                = $::nginx::params::nginx_error_log,
+  $nginx_error_log_level          = $::nginx::nginx_error_log_level,
   $pid                            = $::nginx::params::pid,
   $proxy_temp_path                = $::nginx::params::proxy_temp_path,
   $root_group                     = $::nginx::params::root_group,

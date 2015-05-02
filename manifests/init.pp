@@ -82,6 +82,7 @@ class nginx (
   $log_format                     = undef,
   $http_access_log                = undef,
   $nginx_error_log                = undef,
+  $nginx_error_log_level          = undef,
   $pid                            = undef,
   $proxy_temp_path                = undef,
   $root_group                     = undef,

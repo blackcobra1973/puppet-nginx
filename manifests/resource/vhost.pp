@@ -242,6 +242,7 @@ define nginx::resource::vhost (
   $passenger_env_var            = undef,
   $log_by_lua                   = undef,
   $log_by_lua_file              = undef,
+  $log_delimiter                = $::nginx::params::log_delimiter,
   $use_default_location         = true,
   $rewrite_rules                = [],
   $string_mappings              = {},
@@ -492,12 +493,12 @@ define nginx::resource::vhost (
   # unfortunately means resorting to the $varname_real thing
   $access_log_real = $access_log ? {
     'off'   => 'off',
-    undef   => "${::nginx::config::log_dir}/${name_sanitized}.access.log ${format_log}",
+    undef   => "${::nginx::config::log_dir}/${name_sanitized}${log_delimiter}access.log ${format_log}",
     default => "${access_log} ${format_log}",
   }
 
   $error_log_real = $error_log ? {
-    undef   => "${::nginx::config::log_dir}/${name_sanitized}.error.log",
+    undef   => "${::nginx::config::log_dir}/${name_sanitized}${log_delimiter}error.log",
     default => $error_log,
   }
 
@@ -604,12 +605,12 @@ define nginx::resource::vhost (
     # unfortunately means resorting to the $varname_real thing
     $ssl_access_log_real = $access_log ? {
       'off'   => 'off',
-      undef   => "${::nginx::config::log_dir}/ssl-${name_sanitized}.access.log ${format_log}",
+      undef   => "${::nginx::config::log_dir}/ssl-${name_sanitized}.access${log_delimiter}log ${format_log}",
       default => "${access_log} ${format_log}",
     }
 
     $ssl_error_log_real = $error_log ? {
-      undef   => "${::nginx::config::log_dir}/ssl-${name_sanitized}.error.log",
+      undef   => "${::nginx::config::log_dir}/ssl-${name_sanitized}.error${log_delimiter}log",
       default => $error_log,
     }
 

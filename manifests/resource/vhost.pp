@@ -170,6 +170,7 @@ define nginx::resource::vhost (
   $add_header                   = undef,
   $ssl                          = false,
   $ssl_listen_option            = true,
+  $ssl_name                     = $name,
   $ssl_cert                     = undef,
   $ssl_client_cert              = undef,
   $ssl_dhparam                  = undef,
@@ -184,6 +185,10 @@ define nginx::resource::vhost (
   $ssl_stapling_verify          = false,
   $ssl_session_timeout          = '5m',
   $ssl_trusted_cert             = undef,
+  $ssl_vhost_options            = false,
+  $ssl_hsts                     = true,
+  $ssl_hsts_maxage              = '63072000',
+  $ssl_hsts_xframe              = 'DENY',
   $spdy                         = $::nginx::config::spdy,
   $proxy                        = undef,
   $proxy_redirect               = undef,
@@ -195,6 +200,8 @@ define nginx::resource::vhost (
   $proxy_method                 = undef,
   $proxy_set_body               = undef,
   $resolver                     = [],
+  $resolver_valid               = '300s',
+  $resolver_timeout             = '10s',
   $fastcgi                      = undef,
   $fastcgi_params               = "${::nginx::config::conf_dir}/fastcgi_params",
   $fastcgi_script               = undef,
@@ -618,42 +625,42 @@ define nginx::resource::vhost (
     }
 
     #Generate ssl key/cert with provided file-locations
-    $cert = regsubst($name,' ','_', 'G')
+    $cert = regsubst($ssl_name,' ','_', 'G')
 
     # Check if the file has been defined before creating the file to
     # avoid the error when using wildcard cert on the multiple vhosts
-    ensure_resource('file', "${::nginx::config::conf_dir}/${cert}.crt", {
+    ensure_resource('file', "${::nginx::ssl_dir}/${cert}.crt", {
       owner  => $::nginx::config::daemon_user,
       mode   => '0444',
       source => $ssl_cert,
     })
 
-    ensure_resource('file', "${::nginx::config::conf_dir}/${cert}.client.crt", {
+    ensure_resource('file', "${::nginx::ssl_dir}/${cert}.client.crt", {
       owner  => $::nginx::config::daemon_user,
       mode   => '0444',
       source => $ssl_client_cert,
     })
-    ensure_resource('file', "${::nginx::config::conf_dir}/${cert}.key", {
+    ensure_resource('file', "${::nginx::ssl_dir}/${cert}.key", {
       owner  => $::nginx::config::daemon_user,
       mode   => '0440',
       source => $ssl_key,
     })
     if ($ssl_dhparam != undef) {
-      ensure_resource('file', "${::nginx::config::conf_dir}/${cert}.dh.pem", {
+      ensure_resource('file', "${::nginx::ssl_dir}/${cert}.dh.pem", {
         owner  => $::nginx::config::daemon_user,
         mode   => '0440',
         source => $ssl_dhparam,
       })
     }
     if ($ssl_stapling_file != undef) {
-      ensure_resource('file', "${::nginx::config::conf_dir}/${cert}.ocsp.resp", {
+      ensure_resource('file', "${::nginx::ssl_dir}/${cert}.ocsp.resp", {
         owner  => $::nginx::config::daemon_user,
         mode   => '0440',
         source => $ssl_stapling_file,
       })
     }
     if ($ssl_trusted_cert != undef) {
-      ensure_resource('file', "${::nginx::config::conf_dir}/${cert}.trusted.crt", {
+      ensure_resource('file', "${::nginx::ssl_dir}/${cert}.trusted.crt", {
         owner  => $::nginx::config::daemon_user,
         mode   => '0440',
         source => $ssl_trusted_cert,

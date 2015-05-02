@@ -92,6 +92,7 @@ class nginx (
   $super_user                     = undef,
   $temp_dir                       = undef,
   $vhost_purge                    = undef,
+  $ssl_dir                        = '/etc/ssl/nginx',
 
   # Primary Templates
   $conf_template                  = undef,

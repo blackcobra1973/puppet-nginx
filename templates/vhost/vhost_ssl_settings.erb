@@ -1,0 +1,44 @@
+  ssl on;
+
+  ssl_certificate           <%= scope.lookupvar('nginx::ssl_dir') %>/<%= @ssl_name.gsub(' ', '_') %>.crt;
+  ssl_certificate_key       <%= scope.lookupvar('nginx::ssl_dir') %>/<%= @ssl_name.gsub(' ', '_') %>.key;
+<% if defined? @ssl_client_cert -%>
+  ssl_client_certificate    <%= scope.lookupvar('nginx::ssl_dir') %>/<%= @name.gsub(' ', '_') %>.client.crt;
+  ssl_verify_client on;
+<% end -%>
+<% if defined? @ssl_dhparam -%>
+  ssl_dhparam               <%= scope.lookupvar('nginx::ssl_dir') %>/<%= @ssl_name.gsub(' ', '_') %>.dh.pem;
+<% end -%>
+  ssl_session_cache         <%= ssl_cache %>;
+  ssl_session_timeout       <%= ssl_session_timeout %>;
+  ssl_protocols             <%= ssl_protocols %>;
+  ssl_ciphers               <%= ssl_ciphers %>;
+  ssl_prefer_server_ciphers on;
+<% if @ssl_crl -%>
+  ssl_crl                   <%= ssl_crl %>;
+<% end -%>
+<%- if instance_variables.any? { |iv| iv.to_s.include? 'ssl_' } -%>
+  <%- if @ssl_stapling -%>
+  ssl_stapling              on;
+  <%- end -%>
+  <%- if defined? @ssl_stapling_file -%>
+  ssl_stapling_file         <%= scope.lookupvar('nginx::ssl_dir') %>/<%= @name.gsub(' ', '_') %>.ocsp.resp;
+  <%- end -%>
+  <%- if defined? @ssl_stapling_responder -%>
+  ssl_stapling_responder    <%= ssl_stapling_responder %>;
+  <%- end -%>
+  <%- if @ssl_stapling_verify -%>
+  ssl_stapling_verify       on;
+  <%- end -%>
+  <%- if defined? @ssl_trusted_cert -%>
+  ssl_trusted_certificate   <%= scope.lookupvar('nginx::ssl_dir') %>/<%= @name.gsub(' ', '_') %>.trusted.crt;
+  <%- end -%>
+
+<% end -%>
+<% if @ssl_hsts -%>
+  ## Strict Transport Security (HSTS)
+  add_header Strict-Transport-Security max-age=<%= ssl_hsts_maxage %>;
+  add_header X-Frame-Options <%= ssl_hsts_xframe %>;
+  add_header X-Content-Type-Options nosniff;
+
+<% end -%>

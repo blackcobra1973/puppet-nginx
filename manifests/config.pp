@@ -223,6 +223,10 @@ class nginx::config(
     ensure => directory,
   }
 
+  file { $log_dir:
+    ensure => directory,
+  }
+
   file {$client_body_temp_path:
     ensure => directory,
     owner  => $daemon_user,
@@ -268,8 +272,7 @@ class nginx::config(
   }
 
   file { "${conf_dir}/conf.d/proxy.conf":
-    ensure  => file,
-    content => template($proxy_conf_template),
+    ensure  => absent,
   }
 
   file { "${conf_dir}/conf.d/default.conf":

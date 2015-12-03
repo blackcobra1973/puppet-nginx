@@ -10,6 +10,7 @@ worker_rlimit_nofile            <%= worker_rlimit_nofile %>;
 pid                             <%= pid %>;
 
 <% end -%>
+#error_log                      <%= nginx_error_log %> <%= nginx_error_log_severity %>;
 error_log                       <%= nginx_error_log %><% if @nginx_error_log_level %> <%=nginx_error_log_level%><% end %>;
 
 <% if @nginx_cfg_prepend -%>
@@ -82,8 +83,28 @@ http {
 
 <% if @ignore_invalid_headers -%>
   ignore_invalid_headers        <%= ignore_invalid_headers %>;
-
 <% end -%>
+  keepalive_timeout  <%= @keepalive_timeout %>;
+  tcp_nodelay        <%= @http_tcp_nodelay %>;
+
+<% if @gzip == 'on' -%>
+  gzip              on;
+<% if @gzip_buffers -%>
+  gzip_buffers      <%= @gzip_buffers %>;
+<% end -%>
+  gzip_comp_level   <%= @gzip_comp_level %>;
+<% if @gzip_disable -%>
+  gzip_disable      <%= @gzip_disable %>;
+<% end -%>
+  gzip_min_length   <%= @gzip_min_length %>;
+  gzip_http_version <%= @gzip_http_version %>;
+<% if @gzip_proxied -%>
+  gzip_proxied      <%= @gzip_proxied %>;
+<% end -%>
+  gzip_types        <%= @gzip_types.kind_of?(Array) ? @gzip_types.join(' ') : @gzip_types %>;
+  gzip_vary         <%= @gzip_vary %>;
+<% end -%>
+
 <% if @client_body_temp_path -%>
   client_body_temp_path   <%= @client_body_temp_path %>;
 <% end -%>
@@ -125,7 +146,6 @@ http {
 <% end -%>
 <% if @proxy_cache_path -%>
   proxy_cache_path              <%= proxy_cache_path %> levels=<%= proxy_cache_levels %> keys_zone=<%= proxy_cache_keys_zone %> max_size=<%= proxy_cache_max_size %> inactive=<%= proxy_cache_inactive %>;
-
 <% end -%>
 <% if @fastcgi_cache_path -%>
   fastcgi_cache_path    	      <%= fastcgi_cache_path %> levels=<%= fastcgi_cache_levels %> keys_zone=<%= fastcgi_cache_keys_zone %> max_size=<%= fastcgi_cache_max_size %> inactive=<%= fastcgi_cache_inactive %>;
@@ -152,5 +172,10 @@ http {
 <% if @mail -%>
 mail {
   include                       <%= conf_dir %>/conf.mail.d/*.conf;
+}
+<% end -%>
+<% if @stream -%>
+stream {
+  include <%= @conf_dir %>/conf.stream.d/*.conf;
 }
 <% end -%>

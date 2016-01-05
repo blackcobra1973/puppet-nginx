@@ -59,18 +59,8 @@ http {
   client_header_buffer_size     <%= client_header_buffer_size %>;
   large_client_header_buffers   <%= large_client_header_buffers %>;
   request_pool_size             <%= request_pool_size %>;
-
-<% if @gzip == 'on' -%>
-  gzip                          on;
-  gzip_disable                  "MSIE [1-6]\.(?!.*SV1)";
-  gzip_min_length               <%= gzip_min_length %>;
-  gzip_buffers                  <%= gzip_buffers %>;
-  gzip_types                    <%= gzip_types %>;
-
-<% end -%>
   output_buffers                <%= output_buffers %>;
   postpone_output               <%= postpone_output %>;
-
 <% if @sendfile == 'on' -%>
   sendfile                      on;
   <%- if @http_tcp_nopush == 'on' -%>
@@ -78,14 +68,10 @@ http {
   <%- end -%>
 <% end -%>
   tcp_nodelay                   <%= http_tcp_nodelay %>;
-
   keepalive_timeout             <%= keepalive_timeout %>;
-
 <% if @ignore_invalid_headers -%>
   ignore_invalid_headers        <%= ignore_invalid_headers %>;
 <% end -%>
-  keepalive_timeout  <%= @keepalive_timeout %>;
-  tcp_nodelay        <%= @http_tcp_nodelay %>;
 
 <% if @gzip == 'on' -%>
   gzip              on;
@@ -103,8 +89,8 @@ http {
 <% end -%>
   gzip_types        <%= @gzip_types.kind_of?(Array) ? @gzip_types.join(' ') : @gzip_types %>;
   gzip_vary         <%= @gzip_vary %>;
-<% end -%>
 
+<% end -%>
 <% if @client_body_temp_path -%>
   client_body_temp_path   <%= @client_body_temp_path %>;
 <% end -%>

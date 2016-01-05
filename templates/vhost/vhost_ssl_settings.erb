@@ -47,6 +47,6 @@
 <% end -%>
 <% if @ssl_hpkp -%>
   ## Public Key Pinning (HPKP)
-  add_header Public-Key-Pins  "<%= ssl_hpkp_body %>;max-age=<%= ssl_hpkp_maxage %>;includeSubDomains">;
+  add_header Public-Key-Pins  "<%= ssl_hpkp_body %>;max-age=<%= ssl_hpkp_maxage %>;includeSubDomains";
 
 <% end -%>

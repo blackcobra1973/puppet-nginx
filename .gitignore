@@ -8,3 +8,5 @@ spec/fixtures/manifests
 vendor
 .ruby-version
 .vagrant/
+*.pem
+*.crt

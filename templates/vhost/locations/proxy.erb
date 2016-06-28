@@ -1,21 +1,21 @@
-    proxy_pass            <%= proxy %>;
-    proxy_read_timeout    <%= proxy_read_timeout %>;
-    proxy_connect_timeout <%= proxy_connect_timeout %>;
-    proxy_redirect        <%= proxy_redirect %>;
+    proxy_pass            <%= @proxy %>;
+    proxy_read_timeout    <%= @proxy_read_timeout %>;
+    proxy_connect_timeout <%= @proxy_connect_timeout %>;
+    proxy_redirect        <%= @proxy_redirect %>;
 <% if @proxy_buffering -%>
 
-    proxy_buffering       <%= proxy_buffering %>;
+    proxy_buffering       <%= @proxy_buffering %>;
 
 <% end -%>
 <% if @proxy_request_buffering -%>
-    proxy_request_buffering <%= proxy_request_buffering %>;<% end %>
+    proxy_request_buffering <%= @proxy_request_buffering %>;<% end %>
 <% if @proxy_http_version -%>
-    proxy_http_version    <%= proxy_http_version %>;<% end %>
+    proxy_http_version    <%= @proxy_http_version %>;<% end %>
 <% if @proxy_method -%>
-    proxy_method          <%= proxy_method %>;
+    proxy_method          <%= @proxy_method %>;
 <% end -%>
 <% if @proxy_set_body -%>
-    proxy_set_body        <%= proxy_set_body %>;
+    proxy_set_body        <%= @proxy_set_body %>;
 <% end -%>
 <% unless @proxy_set_header.nil? -%>
 
@@ -25,10 +25,10 @@
 
 <% end -%>
 <% if @proxy_cache -%>
-    proxy_cache           <%= proxy_cache %>;
+    proxy_cache           <%= @proxy_cache %>;
 <% end -%>
 <% if @proxy_cache_valid -%>
-    proxy_cache_valid     <%= proxy_cache_valid %>;
+    proxy_cache_valid     <%= @proxy_cache_valid %>;
 <% end -%>
 <% if @proxy_cache_use_stale -%>
     proxy_cache_use_stale   <%= @proxy_cache_use_stale %>;

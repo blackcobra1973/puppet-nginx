@@ -20,7 +20,8 @@ class nginx::service(
   $service_name      = 'nginx',
   $service_flags     = undef,
   $service_manage    = true,
-) {
+)
+{
 
   $service_enable = $service_ensure ? {
     running => true,
@@ -48,31 +49,30 @@ class nginx::service(
           hasrestart => true,
         }
       }
-    default: {
+      default: {
+        if $::nginx::has_systemd {
+          service { 'nginx':
+            ensure     => $service_ensure_real,
+            name       => $service_name,
+            enable     => $service_enable,
+            hasstatus  => true,
+            hasrestart => true,
+            provider   => systemd,
+          }
 
-      if $::nginx::has_systemd {
-        service { 'nginx':
-          ensure     => $service_ensure_real,
-          name       => $service_name,
-          enable     => $service_enable,
-          hasstatus  => true,
-          hasrestart => true,
-          provider   => systemd,
         }
-
-      }
-      else {
-        service { 'nginx':
-          ensure     => $service_ensure_real,
-          name       => $service_name,
-          enable     => $service_enable,
-          hasstatus  => true,
-          hasrestart => true,
+        else {
+          service { 'nginx':
+            ensure     => $service_ensure_real,
+            name       => $service_name,
+            enable     => $service_enable,
+            hasstatus  => true,
+            hasrestart => true,
+          }
         }
       }
     }
   }
-
   if $configtest_enable == true {
     Service['nginx'] {
       restart => $service_restart,

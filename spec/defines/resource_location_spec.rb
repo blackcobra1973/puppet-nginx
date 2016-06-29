@@ -71,6 +71,12 @@ describe 'nginx::resource::location' do
           :match => '    flv;'
         },
         {
+          :title => 'should set location_satisfy',
+          :attr  => 'location_satisfy',
+          :value => 'any',
+          :match => '    satisfy any;'
+        },
+        {
           :title => 'should set location_allow',
           :attr  => 'location_allow',
           :value => %w( 127.0.0.1 10.0.0.1 ),
@@ -593,10 +599,19 @@ describe 'nginx::resource::location' do
           :notmatch => /proxy_cache_valid\b/
         },
         {
-          :title => 'should set proxy_cache_valid',
+          :title => 'should set proxy_cache_valid when string',
           :attr  => 'proxy_cache_valid',
           :value => 'value',
           :match => /^\s+proxy_cache_valid\s+value;/,
+        },
+        {
+          :title => 'should set proxy_cache_valid when array of strings',
+          :attr  => 'proxy_cache_valid',
+          :value => ['value1','value2'],
+          :match => [
+	    /^\s+proxy_cache_valid\s+value1;/,
+	    /^\s+proxy_cache_valid\s+value2;/,
+	  ]
         },
         {
           :title    => 'should not set proxy_cache',
@@ -647,6 +662,15 @@ describe 'nginx::resource::location' do
           :match => [
             /^\s+proxy_set_header\s+X-TestHeader1 value1;/,
             /^\s+proxy_set_header\s+X-TestHeader2 value2;/,
+          ]
+        },
+        {
+          :title => 'should hide proxy headers',
+          :attr  => 'proxy_hide_header',
+          :value => [ 'X-TestHeader1 value1', 'X-TestHeader2 value2' ],
+          :match => [
+            /^\s+proxy_hide_header\s+X-TestHeader1 value1;/,
+            /^\s+proxy_hide_header\s+X-TestHeader2 value2;/,
           ]
         },
         {

@@ -1,3 +1,4 @@
+# MANAGED BY PUPPET
 <% if @super_user -%>
 user                            <%= daemon_user %>;
 <% end -%>
@@ -23,7 +24,11 @@ error_log                       <%= nginx_error_log %><% if @nginx_error_log_lev
 
 <% end -%>
 events {
-  worker_connections            <%= worker_connections -%>;
+  accept_mutex <%= @accept_mutex %>;
+  <%- if @accept_mutex_delay -%>
+  accept_mutex_delay <%= @accept_mutex_delay %>;
+  <%- end -%>
+  worker_connections <%= @worker_connections -%>;
   <%- if @multi_accept == 'on' -%>
   multi_accept                  on;
   <%- end -%>
@@ -101,7 +106,9 @@ http {
 <% if @gzip_proxied -%>
   gzip_proxied      <%= @gzip_proxied %>;
 <% end -%>
+<% if @gzip_types -%>
   gzip_types        <%= @gzip_types.kind_of?(Array) ? @gzip_types.join(' ') : @gzip_types %>;
+<% end -%>
   gzip_vary         <%= @gzip_vary %>;
 <% end -%>
 
@@ -140,6 +147,9 @@ http {
 <% end -%>
 <% @proxy_set_header.each do |header| -%>
   proxy_set_header        <%= header %>;
+<% end -%>
+<% @proxy_hide_header.each do |header| -%>
+  proxy_hide_header        <%= header %>;
 <% end -%>
 <% if @proxy_headers_hash_bucket_size -%>
   proxy_headers_hash_bucket_size <%= @proxy_headers_hash_bucket_size %>;

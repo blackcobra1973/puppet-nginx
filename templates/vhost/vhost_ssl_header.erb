@@ -54,8 +54,8 @@ server {
 <% end -%>
 
 <% if Array(@resolver).count > 0 -%>
-  resolver                 <% Array(@resolver).each do |r| %> <%=r %><% end %> valid=<%= resolver_valid %>;
-  resolver_timeout          <%= resolver_timeout %>;
+  resolver                 <% Array(@resolver).each do |r| %> <%=r %><% end %> valid=<%= @resolver_valid %>;
+  resolver_timeout          <%= @resolver_timeout %>;
 <% end -%>
 <%- if instance_variables.any? { |iv| iv.to_s.include? 'auth_basic' } -%>
   <% if defined? @auth_basic -%>

@@ -1,5 +1,5 @@
 
-  location <%= location %> {
+  location <%= @location %> {
 <% if @gzip -%>
     ## If you use HTTPS make sure you disable gzip compression
     ## to be safe against BREACH attack.
@@ -15,10 +15,10 @@
     flv;
 <% end -%>
 <% if defined? @access_log -%>
-    access_log <%= access_log %>;
+    access_log <%= @access_log %>;
 <% end -%>
 <% if defined? @error_log -%>
-    error_log <%= error_log %>;
+    error_log <%= @error_log %>;
 <% end -%>
 <% if @location_satisfy -%>
     satisfy <%= @location_satisfy -%>;

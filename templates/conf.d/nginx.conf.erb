@@ -1,18 +1,18 @@
 # MANAGED BY PUPPET
 <% if @super_user -%>
-user                            <%= daemon_user %>;
+user                            <%= @daemon_user %>;
 <% end -%>
-worker_processes                <%= worker_processes %>;
+worker_processes                <%= @worker_processes %>;
 <% if @worker_rlimit_nofile -%>
-worker_rlimit_nofile            <%= worker_rlimit_nofile %>;
+worker_rlimit_nofile            <%= @worker_rlimit_nofile %>;
 <% end -%>
 
 <% if @pid -%>
-pid                             <%= pid %>;
+pid                             <%= @pid %>;
 
 <% end -%>
-#error_log                      <%= nginx_error_log %> <%= nginx_error_log_severity %>;
-error_log                       <%= nginx_error_log %><% if @nginx_error_log_level %> <%=nginx_error_log_level%><% end %>;
+#error_log                      <%= @nginx_error_log %> <%= @nginx_error_log_severity %>;
+error_log                       <%= @nginx_error_log %><% if @nginx_error_log_level %> <%= @nginx_error_log_level %><% end %>;
 
 <% if @nginx_cfg_prepend -%>
 <%- field_width = @nginx_cfg_prepend.inject(0) { |l,(k,v)| k.size > l ? k.size : l } -%>
@@ -26,19 +26,19 @@ error_log                       <%= nginx_error_log %><% if @nginx_error_log_lev
 events {
   accept_mutex <%= @accept_mutex %>;
   <%- if @accept_mutex_delay -%>
-  accept_mutex_delay <%= @accept_mutex_delay %>;
+  accept_mutex_delay            <%= @accept_mutex_delay %>;
   <%- end -%>
-  worker_connections <%= @worker_connections -%>;
+  worker_connections            <%= @worker_connections -%>;
   <%- if @multi_accept == 'on' -%>
   multi_accept                  on;
   <%- end -%>
   <%- if @events_use -%>
-  use                           <%= events_use %>;
+  use                           <%= @events_use %>;
   <%- end -%>
 }
 
 http {
-  include                       <%= conf_dir %>/mime.types;
+  include                       <%= @conf_dir %>/mime.types;
   default_type                  application/octet-stream;
 
 <% if @log_format -%>
@@ -46,107 +46,93 @@ http {
   log_format    <%= key %>            '<%= value %>';
 <% end -%>
 <% end -%>
-  access_log                    <%= http_access_log %>;
+  access_log                    <%= @http_access_log %>;
 
-  server_tokens                 <%= server_tokens %>;
+  server_tokens                 <%= @server_tokens %>;
 
-  types_hash_max_size           <%= types_hash_max_size %>;
-  types_hash_bucket_size        <%= types_hash_bucket_size %>;
+  types_hash_max_size           <%= @types_hash_max_size %>;
+  types_hash_bucket_size        <%= @types_hash_bucket_size %>;
 
-  server_names_hash_bucket_size <%= names_hash_bucket_size %>;
-  server_names_hash_max_size    <%= names_hash_max_size %>;
+  server_names_hash_bucket_size <%= @names_hash_bucket_size %>;
+  server_names_hash_max_size    <%= @names_hash_max_size %>;
 
-  client_header_timeout         <%= client_header_timeout %>;
-  client_body_timeout           <%= client_body_timeout %>;
-  send_timeout                  <%= send_timeout %>;
+  client_header_timeout         <%= @client_header_timeout %>;
+  client_body_timeout           <%= @client_body_timeout %>;
+  send_timeout                  <%= @send_timeout %>;
 
-  connection_pool_size          <%= connection_pool_size %>;
-  client_header_buffer_size     <%= client_header_buffer_size %>;
-  large_client_header_buffers   <%= large_client_header_buffers %>;
-  request_pool_size             <%= request_pool_size %>;
-
-<% if @gzip == 'on' -%>
-  gzip                          on;
-  gzip_disable                  "MSIE [1-6]\.(?!.*SV1)";
-  gzip_min_length               <%= gzip_min_length %>;
-  gzip_buffers                  <%= gzip_buffers %>;
-  gzip_types                    <%= gzip_types %>;
-
-<% end -%>
-  output_buffers                <%= output_buffers %>;
-  postpone_output               <%= postpone_output %>;
-
+  connection_pool_size          <%= @connection_pool_size %>;
+  client_header_buffer_size     <%= @client_header_buffer_size %>;
+  large_client_header_buffers   <%= @large_client_header_buffers %>;
+  request_pool_size             <%= @request_pool_size %>;
+  output_buffers                <%= @output_buffers %>;
+  postpone_output               <%= @postpone_output %>;
 <% if @sendfile == 'on' -%>
   sendfile                      on;
   <%- if @http_tcp_nopush == 'on' -%>
   tcp_nopush                    on;
   <%- end -%>
 <% end -%>
-  tcp_nodelay                   <%= http_tcp_nodelay %>;
-
-  keepalive_timeout             <%= keepalive_timeout %>;
-
+  tcp_nodelay                   <%= @http_tcp_nodelay %>;
+  keepalive_timeout             <%= @keepalive_timeout %>;
 <% if @ignore_invalid_headers -%>
-  ignore_invalid_headers        <%= ignore_invalid_headers %>;
+  ignore_invalid_headers        <%= @ignore_invalid_headers %>;
 <% end -%>
-  keepalive_timeout  <%= @keepalive_timeout %>;
-  tcp_nodelay        <%= @http_tcp_nodelay %>;
 
 <% if @gzip == 'on' -%>
-  gzip              on;
+  gzip                          on;
 <% if @gzip_buffers -%>
-  gzip_buffers      <%= @gzip_buffers %>;
+  gzip_buffers                  <%= @gzip_buffers %>;
 <% end -%>
-  gzip_comp_level   <%= @gzip_comp_level %>;
+  gzip_comp_level               <%= @gzip_comp_level %>;
 <% if @gzip_disable -%>
-  gzip_disable      <%= @gzip_disable %>;
+  gzip_disable                  <%= @gzip_disable %>;
 <% end -%>
-  gzip_min_length   <%= @gzip_min_length %>;
-  gzip_http_version <%= @gzip_http_version %>;
+  gzip_min_length               <%= @gzip_min_length %>;
+  gzip_http_version             <%= @gzip_http_version %>;
 <% if @gzip_proxied -%>
-  gzip_proxied      <%= @gzip_proxied %>;
+  gzip_proxied                  <%= @gzip_proxied %>;
 <% end -%>
 <% if @gzip_types -%>
-  gzip_types        <%= @gzip_types.kind_of?(Array) ? @gzip_types.join(' ') : @gzip_types %>;
+  gzip_types                    <%= @gzip_types.kind_of?(Array) ? @gzip_types.join(' ') : @gzip_types %>;
 <% end -%>
-  gzip_vary         <%= @gzip_vary %>;
-<% end -%>
+  gzip_vary                     <%= @gzip_vary %>;
 
+<% end -%>
 <% if @client_body_temp_path -%>
-  client_body_temp_path   <%= @client_body_temp_path %>;
+  client_body_temp_path         <%= @client_body_temp_path %>;
 <% end -%>
 <% if @client_max_body_size -%>
-  client_max_body_size    <%= @client_max_body_size %>;
+  client_max_body_size          <%= @client_max_body_size %>;
 <% end -%>
 <% if @client_body_buffer_size -%>
-  client_body_buffer_size <%= @client_body_buffer_size %>;
+  client_body_buffer_size       <%= @client_body_buffer_size %>;
 <% end -%>
 <% if @proxy_redirect -%>
-  proxy_redirect          <%= @proxy_redirect %>;
+  proxy_redirect                <%= @proxy_redirect %>;
 <% end -%>
 <% if @proxy_temp_path -%>
-  proxy_temp_path         <%= @proxy_temp_path %>;
+  proxy_temp_path               <%= @proxy_temp_path %>;
 <% end -%>
 <% if @proxy_connect_timeout -%>
-  proxy_connect_timeout   <%= @proxy_connect_timeout %>;
+  proxy_connect_timeout         <%= @proxy_connect_timeout %>;
 <% end -%>
 <% if @proxy_send_timeout -%>
-  proxy_send_timeout      <%= @proxy_send_timeout %>;
+  proxy_send_timeout            <%= @proxy_send_timeout %>;
 <% end -%>
 <% if @proxy_read_timeout -%>
-  proxy_read_timeout      <%= @proxy_read_timeout %>;
+  proxy_read_timeout            <%= @proxy_read_timeout %>;
 <% end -%>
 <% if @proxy_buffers -%>
-  proxy_buffers           <%= @proxy_buffers %>;
+  proxy_buffers                 <%= @proxy_buffers %>;
 <% end -%>
 <% if @proxy_buffer_size -%>
-  proxy_buffer_size       <%= @proxy_buffer_size %>;
+  proxy_buffer_size             <%= @proxy_buffer_size %>;
 <% end -%>
 <% if @proxy_http_version -%>
-  proxy_http_version      <%= @proxy_http_version %>;
+  proxy_http_version            <%= @proxy_http_version %>;
 <% end -%>
 <% @proxy_set_header.each do |header| -%>
-  proxy_set_header        <%= header %>;
+  proxy_set_header              <%= header %>;
 <% end -%>
 <% @proxy_hide_header.each do |header| -%>
   proxy_hide_header        <%= header %>;
@@ -155,16 +141,16 @@ http {
   proxy_headers_hash_bucket_size <%= @proxy_headers_hash_bucket_size %>;
 <% end -%>
 <% if @proxy_cache_path -%>
-  proxy_cache_path              <%= proxy_cache_path %> levels=<%= proxy_cache_levels %> keys_zone=<%= proxy_cache_keys_zone %> max_size=<%= proxy_cache_max_size %> inactive=<%= proxy_cache_inactive %>;
+  proxy_cache_path              <%= @proxy_cache_path %> levels=<%= @proxy_cache_levels %> keys_zone=<%= @proxy_cache_keys_zone %> max_size=<%= @proxy_cache_max_size %> inactive=<%= @proxy_cache_inactive %>;
 <% end -%>
 <% if @fastcgi_cache_path -%>
-  fastcgi_cache_path    	      <%= fastcgi_cache_path %> levels=<%= fastcgi_cache_levels %> keys_zone=<%= fastcgi_cache_keys_zone %> max_size=<%= fastcgi_cache_max_size %> inactive=<%= fastcgi_cache_inactive %>;
+  fastcgi_cache_path    	      <%= @fastcgi_cache_path %> levels=<%= @fastcgi_cache_levels %> keys_zone=<%= @fastcgi_cache_keys_zone %> max_size=<%= @fastcgi_cache_max_size %> inactive=<%= @fastcgi_cache_inactive %>;
 <% end -%>
 <% if @fastcgi_cache_key -%>
-  fastcgi_cache_key		          <%= fastcgi_cache_key %>;
+  fastcgi_cache_key		          <%= @fastcgi_cache_key %>;
 <% end -%>
 <% if @fastcgi_cache_use_stale -%>
-  fastcgi_cache_use_stale       <%= fastcgi_cache_use_stale %>;
+  fastcgi_cache_use_stale       <%= @fastcgi_cache_use_stale %>;
 <% end -%>
 <% if @http_cfg_append -%>
 
@@ -176,12 +162,12 @@ http {
   <%- end -%>
 
 <% end -%>
-  include                       <%= conf_dir %>/conf.d/*.conf;
-  include                       <%= conf_dir %>/sites-enabled/*;
+  include                       <%= @conf_dir %>/conf.d/*.conf;
+  include                       <%= @conf_dir %>/sites-enabled/*;
 }
 <% if @mail -%>
 mail {
-  include                       <%= conf_dir %>/conf.mail.d/*.conf;
+  include                       <%= @conf_dir %>/conf.mail.d/*.conf;
 }
 <% end -%>
 <% if @stream -%>

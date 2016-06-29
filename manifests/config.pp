@@ -63,7 +63,7 @@ class nginx::config(
   $gzip                           = 'on',
   $gzip_buffers                   = '4 8k',
   $gzip_comp_level                = 1,
-  $gzip_disable                   = 'msie6',
+  $gzip_disable                   = '"MSIE [1-6]\.(?!.*SV1)"',
   $gzip_min_length                = 20,
   $gzip_http_version              = 1.1,
   $gzip_proxied                   = 'off',

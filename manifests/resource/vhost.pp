@@ -199,6 +199,7 @@ define nginx::resource::vhost (
   $add_header                   = undef,
   $ssl                          = false,
   $ssl_listen_option            = true,
+  $ssl_letsencrypt              = false,
   $ssl_name                     = $name,
   $ssl_cert                     = undef,
   $ssl_client_cert              = undef,
@@ -715,21 +716,22 @@ define nginx::resource::vhost (
 
     # Check if the file has been defined before creating the file to
     # avoid the error when using wildcard cert on the multiple vhosts
-    ensure_resource('file', "${::nginx::ssl_dir}/${cert}.crt", {
-      owner  => $::nginx::config::daemon_user,
-      mode   => '0444',
-      source => $ssl_cert,
-    })
-
+    if ( $ssl_letsencrypt == false ) {
+      ensure_resource('file', "${::nginx::ssl_dir}/${cert}.crt", {
+        owner  => $::nginx::config::daemon_user,
+        mode   => '0444',
+        source => $ssl_cert,
+      })
+      ensure_resource('file', "${::nginx::ssl_dir}/${cert}.key", {
+        owner  => $::nginx::config::daemon_user,
+        mode   => '0440',
+        source => $ssl_key,
+      })
+    }
     ensure_resource('file', "${::nginx::ssl_dir}/${cert}.client.crt", {
       owner  => $::nginx::config::daemon_user,
       mode   => '0444',
       source => $ssl_client_cert,
-    })
-    ensure_resource('file', "${::nginx::ssl_dir}/${cert}.key", {
-      owner  => $::nginx::config::daemon_user,
-      mode   => '0440',
-      source => $ssl_key,
     })
     if ($ssl_dhparam != undef) {
       ensure_resource('file', "${::nginx::ssl_dir}/${cert}.dh.pem", {

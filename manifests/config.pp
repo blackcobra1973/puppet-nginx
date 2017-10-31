@@ -95,6 +95,7 @@ class nginx::config(
   $proxy_connect_timeout          = '90',
   $proxy_headers_hash_bucket_size = '64',
   $proxy_http_version             = undef,
+  $proxy_client_max_body_size     = undef,
   $proxy_read_timeout             = '90',
   $proxy_redirect                 = 'off',
   $proxy_send_timeout             = '90',
@@ -105,6 +106,7 @@ class nginx::config(
   ],
   $request_pool_size              = '4k',
   $proxy_hide_header              = [],
+  $proxy_add_header               = [],
   $sendfile                       = 'on',
   $server_tokens                  = 'on',
   $spdy                           = 'off',
@@ -133,6 +135,7 @@ class nginx::config(
   }
   validate_string($multi_accept)
   validate_array($proxy_set_header)
+  validate_array($proxy_add_header)
   validate_array($proxy_hide_header)
   if ($proxy_http_version != undef) {
     validate_string($proxy_http_version)

@@ -41,3 +41,11 @@
 <% if @proxy_cache_key -%>
     proxy_cache_key         <%= @proxy_cache_key %>;
 <% end -%>
+<% unless @proxy_add_header.nil? -%>
+    <%- @proxy_add_header.each do |add_header| -%>
+    add_header            <%= add_header %>;
+    <%- end -%>
+<% end -%>
+<% if @proxy_client_max_body_size -%>
+    client_max_body_size  <%= @proxy_client_max_body_size %>;
+<% end -%>

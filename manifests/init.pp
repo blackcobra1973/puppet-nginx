@@ -57,10 +57,12 @@ class nginx (
   $proxy_connect_timeout          = undef,
   $proxy_headers_hash_bucket_size = undef,
   $proxy_http_version             = undef,
+  $proxy_client_max_body_size     = undef,
   $proxy_read_timeout             = undef,
   $proxy_redirect                 = undef,
   $proxy_send_timeout             = undef,
   $proxy_set_header               = undef,
+  $proxy_add_header               = undef,
   $proxy_hide_header              = undef,
   $sendfile                       = undef,
   $server_tokens                  = undef,
@@ -185,10 +187,12 @@ class nginx (
         $proxy_connect_timeout or
         $proxy_headers_hash_bucket_size or
         $proxy_http_version or
+        $proxy_client_max_body_size or
         $proxy_read_timeout or
         $proxy_redirect or
         $proxy_send_timeout or
         $proxy_set_header or
+        $proxy_add_header or
         $proxy_hide_header or
         $proxy_temp_path or
         $run_dir or
@@ -267,10 +271,12 @@ class nginx (
       proxy_connect_timeout          => $proxy_connect_timeout,
       proxy_headers_hash_bucket_size => $proxy_headers_hash_bucket_size,
       proxy_http_version             => $proxy_http_version,
+      proxy_client_max_body_size     => $proxy_client_max_body_size,
       proxy_read_timeout             => $proxy_read_timeout,
       proxy_redirect                 => $proxy_redirect,
       proxy_send_timeout             => $proxy_send_timeout,
       proxy_set_header               => $proxy_set_header,
+      proxy_add_header               => $proxy_add_header,
       proxy_hide_header              => $proxy_hide_header,
       proxy_temp_path                => $proxy_temp_path,
       run_dir                        => $run_dir,

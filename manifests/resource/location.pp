@@ -148,6 +148,7 @@ define nginx::resource::location (
   $proxy_read_timeout   = $::nginx::config::proxy_read_timeout,
   $proxy_connect_timeout = $::nginx::config::proxy_connect_timeout,
   $proxy_set_header     = $::nginx::config::proxy_set_header,
+  $proxy_add_header     = $::nginx::config::proxy_add_header,
   $proxy_buffering      = undef,
   $proxy_request_buffering  = undef,
   $proxy_hide_header    = $::nginx::config::proxy_hide_header,
@@ -185,6 +186,7 @@ define nginx::resource::location (
   $proxy_method         = undef,
   $proxy_set_body       = undef,
   $proxy_http_version   = undef,
+  $proxy_client_max_body_size = undef,
   $auth_basic           = undef,
   $auth_basic_user_file = undef,
   $rewrite_rules        = [],
@@ -224,6 +226,7 @@ define nginx::resource::location (
   validate_string($proxy_read_timeout)
   validate_string($proxy_connect_timeout)
   validate_array($proxy_set_header)
+  validate_array($proxy_add_header)
   validate_array($proxy_hide_header)
   if ($fastcgi != undef) {
     validate_string($fastcgi)
